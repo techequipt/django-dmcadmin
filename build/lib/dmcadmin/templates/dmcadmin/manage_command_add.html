@@ -1,0 +1,78 @@
+{% extends 'dmcadmin/index.html' %}
+
+{% block content_header %}
+    <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Manage command</h1>
+    </div>
+{% endblock %}
+
+{% block content_boxes %}
+{% endblock %}
+
+{% block content_main %}
+    <div class="col-12">
+        <div class="row">
+
+            <h4>How to add new manage command to the list</h4>
+        </div>
+        <div class="row">
+            <div>
+            <p>from dmcadmin.models import ManageCommandData</p>
+            <p>mcd = ManageCommandData()</p>
+            <p>
+                mcd.add_manage_command_to_conf(
+                'app_name', 'cls_name', 'manage_command_name', 'description', template_media_path=None, args=[], kwargs={}
+                )
+            </p>
+
+            <ul>
+                <li>
+                    template_media_path - it is a path to import file template, if you created import manage command for
+                    import data. Save it in /static/.
+                    <p>Recomendation: import template file save to there:</p>
+                    /static/managecommand/import_templates/your_template_file.xlsx
+                </li>
+                <li>
+                    args: add optional arguments as list ['key', 'key']
+                </li>
+                <li>
+                    kwargs: add optional named arguments as dict {'key':'value', 'key':'value'}
+                </li>
+            </ul>
+            </div>
+        </div>
+        <div class="row">
+            <h4>Example:</h4>
+        </div>
+            <div>
+                <p>
+                    mcd.add_manage_command_to_conf(
+                        'blog', 'post', 'blog_post_import', 'import new posts for blog',
+                        template_media_path='/static/managecommand/import_templates/new_blogs_post.xlsx',
+                        args=[], kwargs={}
+                    )
+                </p>
+                <p>
+                    mcd.add_manage_command_to_conf(
+                        'system', 'system', 'dumpdata', 'dump dmcadmin', args=['dmcadmin'], kwargs={'indent':4}
+                    )
+                </p>
+            </div>
+            <div class="card-footer clearfix">
+                <p>
+                    You can edit manage command stores file in editor project_root/static/managecommand/conf/manage_command.conf, if you want
+                </p>
+            </div>
+
+        </div>
+        <div class="row">
+            <p>After adding a new command, you need to restart the backend to see the new command on the web</p>
+        </div>
+
+            <!-- /.card-body -->
+
+
+
+            <!-- /.card -->
+
+{% endblock %}

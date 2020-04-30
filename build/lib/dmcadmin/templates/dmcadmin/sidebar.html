@@ -1,0 +1,44 @@
+
+<!-- Sidebar -->
+
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item has-treeview menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Manage command
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="{% url 'dmcadmin:manage_command' %}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Run</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{% url 'dmcadmin:manage_task'%}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Table</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                /admin/
+                <span class="right badge badge-danger">Left dmcadmin</span>
+              </p>
+            </a>
+          </li>
+
+        </ul>
+
+    <!-- /.sidebar -->
+
+

@@ -1,0 +1,76 @@
+{% extends 'dmcadmin/index.html' %}
+
+{% block content_header %}
+    <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Manage command task: {{ manage_task.id }}</h1>
+    </div>
+{% endblock %}
+
+{% block content_boxes %}
+{% endblock %}
+
+{% block content_main %}
+    <div class="col-12">
+
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Task detail</h3>
+                  </div>
+                  <!-- /.card-header -->
+                  <!-- form start -->
+                  <form role="form" action="." method="POST" enctype="multipart/form-data">
+                    <div class="card-body">
+                        {% for field in form %}
+                            <div class="form-group">
+                                {{ field.label_tag }}
+                                {% if field.name == 'log_file' or field.name == 'console_log_file'%}
+                                    <a href="{{ field.value }}">{{ field.value }}</a>
+                                {% else %}
+                                    {{ field }}
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    {% csrf_token %}
+
+                    <div class="card-footer">
+{#                      <button type="submit" class="btn btn-primary">Submt</button>#}
+                    </div>
+                  </form>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+
+            <div class="card-body">
+                {% include 'dmcadmin/manage_task_list.html' %}
+            </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer clearfix">
+            <ul class="pagination pagination-sm m-0 float-left">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item">Page {{ page_obj.number }} of {{ paginator.num_pages }}</li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+
+
+            </ul>
+        </div>
+    </div>
+    <!-- /.card -->
+
+{% endblock %}

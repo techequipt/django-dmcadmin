@@ -1,0 +1,149 @@
+{% extends 'dmcadmin/index.html' %}
+
+{% block content_header %}
+    <div class="col-sm-6">
+        <h1 class="m-0 text-dark">Manage command</h1>
+    </div>
+{% endblock %}
+
+{% block content_boxes %}
+{% endblock %}
+
+{% block content_main %}
+    <div class="col-12">
+        <div class="row">
+
+            <div class="col-md-6">
+                <div class="card">
+
+                    <div class="card card-primary">
+                      {% if running_task %}
+                          <div class="alert alert-success alert-dismissible">
+                              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                              <h5><i class="icon fas fa-check"></i> The command is launched: {{ running_task }}</h5>
+                              <a href="{% url 'dmcadmin:manage_task_detail' running_task %}">Detail</a>
+                          </div>
+
+                      {% endif %}
+                      {% if error_running_command %}
+                          Run error: {{ error_running_command }}
+                      {% endif %}
+                      <div class="card-header">
+                        <h3 class="card-title">Manage command to run</h3>
+                      </div>
+                      <!-- /.card-header -->
+                      <!-- form start -->
+                      <form role="form" action="." method="POST" enctype="multipart/form-data">
+                        <div class="card-body">
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+    {#                                {% if field.name == 'import_file' %}#}
+    {#                                    {{ field.label_tag }}#}
+    {#                                    <div class="input-group">#}
+    {#                                        <div class="custom-file">#}
+    {#                                            {{ field }}#}
+    {#                                            <label class="custom-file-label" for="exampleInputFile">Select file</label>#}
+    {#                                        </div>#}
+    {#                                    </div>#}
+    {#                                {% else %}#}
+    {#                                    {{ field.label_tag }}#}
+    {#                                    {{ field }}#}
+    {#                                {% endif %}#}
+                                </div>
+                            {% endfor %}
+
+                        </div>
+                        {% csrf_token %}
+
+                        <div class="card-footer">
+                          <button type="submit" class="btn btn-primary">Run command</button>
+                        </div>
+                      </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card card-primary">
+                      {% include 'dmcadmin/manage_task_list.html' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+
+            <div class="card-body">
+                <div class="card-header">
+                    <h3 class="card-title">List of available manage commands</h3>
+                </div>
+                <a href="{% url 'dmcadmin:add_manage_command'%}" class="bg-primary">Add command</a>
+                <!-- /.card-header -->
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">App</th>
+                      <th style="width: 10px">Class</th>
+                      <th style="width: 10px">Manage command name</th>
+                      <th>args</th>
+                      <th>kwargs</th>
+                      <th>Import file template</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for app_name, cls_commands in manage_commands.items  %}
+                        {% for cls_name, commands in cls_commands.items %}
+                            {% for manage_command in commands %}
+                            <tr>
+                                <td>{{ app_name }}</td>
+                                <td>{{ cls_name }}</td>
+                                <td>{{ manage_command.manage_command_name }}</td>
+                                <td>{{ manage_command.manage_command_args }}</td>
+                                <td>{{ manage_command.manage_command_kwargs }}</td>
+                                <td>
+                                    {% if manage_command.template_media_path %}
+                                    <a href="{{ manage_command.template_media_path }}">
+                                        {{ manage_command.template_media_path }}
+                                    </a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ manage_command.description }}</td>
+                                <td>
+                                    <a href="{% url 'dmcadmin:manage_command'%}?manage_command_to_run={{ manage_command }}&app_name={{ app_name }}&cls_name={{ cls_name }}">
+                                        Select
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-left">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item">Page {{ page_obj.number }} of {{ paginator.num_pages }}</li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+                        </li>
+                    {% endif %}
+
+
+                </ul>
+            </div>
+        </div>
+            <!-- /.card -->
+
+{% endblock %}
