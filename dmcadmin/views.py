@@ -52,8 +52,39 @@ class ManageCommandView(LoginRequiredMixin, View):
         manage_command_response = {}
         if form.is_valid():
             manage_command_name = form.cleaned_data['manage_command_name']
-            manage_command_args = eval(form.cleaned_data['manage_command_args'] or '[]')
-            manage_command_kwargs = eval(form.cleaned_data['manage_command_kwargs'] or '{}')
+
+            mc_kwargs = form.cleaned_data['manage_command_kwargs'].strip()
+            manage_command_kwargs = {}
+
+            def _add_kwargs(list_kwargs):
+                for i in list_kwargs:
+                    vals = i.split()
+                    if len(vals) == 1 and '=' in vals[0]:
+                        vals = vals[0].split('=')
+                    if len(vals) == 2:
+                        manage_command_kwargs[str(vals[0])] = str(vals[1])
+                    elif len(vals) == 1:
+                        manage_command_kwargs[str(vals[0])] = ''
+
+            if mc_kwargs.startswith('--'):
+                list_kwargs = mc_kwargs.split('--')
+                _add_kwargs(list_kwargs)
+            elif mc_kwargs.startswith('-'):
+                list_kwargs = mc_kwargs.split('-')
+                _add_kwargs(list_kwargs)
+            elif mc_kwargs.startswith('{'):
+                manage_command_kwargs = eval(mc_kwargs)
+            else:
+                manage_command_kwargs = {}
+
+            mc_args = form.cleaned_data['manage_command_args'].strip()
+            if mc_args.startswith('['):
+                manage_command_args = eval(mc_args)
+            elif mc_args:
+                manage_command_args = mc_args.split()
+            else:
+                manage_command_args = []
+            # manage_command_kwargs = eval(form.cleaned_data['manage_command_kwargs'] or '{}')
             is_system = True if self.mcd.app == 'system' else False
             if request.FILES:
                 file_path = handle_uploaded_file(request.FILES['import_file'])

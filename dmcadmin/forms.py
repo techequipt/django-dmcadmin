@@ -14,12 +14,12 @@ class ManageCommandForm(forms.Form):
     )
     manage_command_args = forms.CharField(
         label='args list',
-        required=True,
+        required=False,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     manage_command_kwargs = forms.CharField(
         label='kwargs dict',
-        required=True,
+        required=False,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
     import_file = forms.FileField(
